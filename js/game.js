@@ -3,6 +3,14 @@ class GameScene extends Phaser.Scene {
   constructor() {
     super('GameScene');
     this.ojisanFaces = ['👨‍🦳', '👨‍🦰', '👨‍🦱', '🧔‍♂️', '👴'];
+    this.clearComments = [
+      '濡れおじさんの出来上がり。',
+      'おじさんの心の火は消えない',
+      '街から歩きタバコおじが消えた日',
+      'あなたが街のヒーロー',
+      'いろんな意味で煙たい',
+      '駆除完了'
+    ];
     this.score = 0;
     this.timeLeft = 30;
     this.stage = 1;
@@ -10,9 +18,6 @@ class GameScene extends Phaser.Scene {
   }
 
   create() {
-    // Background
-    this.add.rectangle(400, 300, 800, 600, 0x87CEEB);
-
     // UI Text
     this.scoreText = this.add.text(20, 20, 'Score: 0', {
       fontSize: '24px',
@@ -164,7 +169,16 @@ class GameScene extends Phaser.Scene {
 
   cigaretteHit() {
     // Cigarette消える
-    this.add.text(this.cigarette.x, this.cigarette.y, '💨', {
+    const randomComment = Phaser.Utils.Array.GetRandom(this.clearComments);
+    const commentText = this.add.text(this.cigarette.x, this.cigarette.y, randomComment, {
+      fontSize: '24px',
+      fill: '#fff',
+      backgroundColor: '#000',
+      padding: { x: 10, y: 5 },
+    }).setOrigin(0.5, 0.5);
+
+    // おじさんの絵文字を追加
+    const ojisanEmoji = this.add.text(this.cigarette.x, this.cigarette.y - 50, this.ojisan.text, {
       fontSize: '40px',
     }).setOrigin(0.5, 0.5);
 
@@ -192,6 +206,12 @@ class GameScene extends Phaser.Scene {
     this.ojisan.setText(randomOjisan);
     this.ojisan.x = Phaser.Math.Between(100, 700);
     this.ojisan.y = Phaser.Math.Between(50, 200);
+
+    // コメントを一定時間後に消す
+    this.time.delayedCall(2000, () => {
+      commentText.destroy();
+      ojisanEmoji.destroy();
+    });
   }
 
   playSFX(type) {
