@@ -58,6 +58,7 @@ class GameScene extends Phaser.Scene {
 
     // Water bullets group
     this.waterBullets = this.physics.add.group();
+    this.physics.world.gravity.y = 0;
 
     // Ojisan velocity
     this.ojisanVelocityX = Phaser.Math.Between(-50, 50);
@@ -156,10 +157,14 @@ class GameScene extends Phaser.Scene {
     });
 
     this.physics.add.existing(water);
+    water.body.setAllowGravity(false);
+    water.body.setGravity(0, 0);
     water.body.setVelocity(
       Math.cos(angle) * speed,
       Math.sin(angle) * speed
     );
+    water.body.setBounce(0, 0);
+    water.body.setCollideWorldBounds(false);
 
     this.waterBullets.add(water);
 
